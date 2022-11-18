@@ -1,0 +1,309 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider        = "prisma-client-js"
+  output          = "../node_modules/@prisma/client/generate-client"
+  previewFeatures = ["fullTextSearch", "extendedWhereUnique", "interactiveTransactions", "filteredRelationCount", "fieldReference"]
+  relationMode    = "prisma"
+}
+
+generator tsrpc {
+    provider = "node ./node_modules/@stringke/prisma-generator-tsrpc"
+    output   = "../src/shared/protocols/db"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// 用户
+model User {
+  /// ID 主键
+  id                    Int                   @id @default(autoincrement())
+  /// 昵称
+  nickname              String                @unique
+  /// 头像
+  avatar                String?
+  /// 手机号
+  phone                 String?               @unique
+  /// 手机区号
+  phoneCode             String?               @default("+86")
+  /// 手机是否验证
+  phoneVerififedAt      DateTime?
+  /// 是否会员
+  isMember              Boolean               @default(false)
+  /// 会员等级
+  memberLevel           Int                   @default(0)
+  /// 会员过期时间
+  memberExpiredAt       DateTime?
+  /// 会员开通时间
+  memberStartedAt       DateTime?
+  /// 登陆 IP
+  loginIp               String?
+  /// 登陆时间
+  loginAt               DateTime?
+  /// 注册 IP
+  registerIp            String?
+  /// 注册时间
+  registerAt            DateTime?
+  /// 注册渠道
+  registerChannel       String?
+  /// 邀请人 ID
+  inviterId             Int?
+  /// 邀请活动 ID
+  inviteActivityId      Int?
+  /// 是否开通推广联盟
+  isPromoter            Boolean               @default(false)
+  /// 推广联盟会员订单分成
+  promoterOrderDivide   Int?                  @default(0)
+  /// 推广联盟资源包订单分成
+  promoterPackageDivide Int?                  @default(0)
+  /// 推广联盟其他类型订单分成
+  promoterOtherDivide   Int?                  @default(0)
+  /// 总提成
+  totalDivide           Int?                  @default(0)
+  /// 已提现
+  withdrawedDivide      Int?                  @default(0)
+  /// 未提现
+  unwithdrawDivide      Int?                  @default(0)
+  /// 已结算提成
+  settledDivide         Int?                  @default(0)
+  /// 未结算提成
+  unsettledDivide       Int?                  @default(0)
+  /// 会员天数奖励
+  memberDayReward       Int?                  @default(0)
+  /// 资源包次数奖励
+  packageCountReward    Int?                  @default(0)
+  /// 提现方式
+  withdrawType          String?
+  /// 提现账号
+  withdrawAccount       String?
+  /// 是否封禁
+  isBanned              Boolean               @default(false)
+  /// 封禁原因
+  bannedReason          String?
+  /// 封禁时间
+  bannedAt              DateTime?
+  /// 封禁过期时间
+  bannedExpiredAt       DateTime?
+  /// 创建时间
+  createdAt             DateTime              @default(now())
+  /// 更新时间
+  updatedAt             DateTime              @updatedAt
+  /// 删除时间
+  deletedAt             DateTime?
+  /// 文件
+  files                 UserFile[]
+  /// 批量文件处理记录
+  batchFiles            UserBatchFile[]
+  /// 资源包
+  resourcePackages      UserResourcePackage[]
+  /// 用户记录
+  records               UserRecord[]
+}
+
+/// 消费类型
+enum UserFileConsumeType {
+  /// 会员
+  MEMBER
+  /// 资源包
+  RESOURCE_PACKAGE
+  /// 其他
+  OTHER
+}
+
+/// 用户文件
+model UserFile {
+  /// ID 主键
+  id                       Int                  @id @default(autoincrement())
+  /// 文件名
+  fileName                 String?
+  /// 文件大小
+  fileSize                 Int?
+  /// 文件尺寸 [width,height]
+  fileDimension            Float[]
+  /// 文件 MD5
+  fileMd5                  String?
+  /// 文件路径
+  filePath                 String?
+  /// 结果路径
+  resultPath               String?
+  /// 结果大小
+  resultSize               Int?
+  /// 结果尺寸 [width,height]
+  resultDimension          Float[]
+  /// 结果 MD5
+  resultMd5                String?
+  /// 结果缩略图路径
+  thumbnailResultPath      String?
+  /// 结果缩略图大小
+  thumbnailResultSize      Int?
+  /// 结果缩略图尺寸 [width,height]
+  thumbnailResultDimension Float[]
+  /// 结果缩略图 MD5
+  thumbnailResultMd5       String?
+  /// 缩略图路径
+  thumbnailPath            String?
+  /// 缩略图大小
+  thumbnailSize            Int?
+  /// 缩略图尺寸 [width,height]
+  thumbnailDimension       Float[]
+  /// 缩略图 MD5
+  thumbnailMd5             String?
+  /// 任务状态
+  taskStatus               String?
+  /// 任务重试次数
+  taskRetryCount           Int?                 @default(0)
+  /// 任务错误信息
+  taskError                String?
+  /// 任务最近一次启动时间
+  taskLastStartedAt        DateTime?
+  /// 任务最近一次数据汇报时间
+  taskLastReportedAt       DateTime?
+  /// 任务人脸数据
+  taskFaceData             Json?
+  /// 任务类型
+  taskType                 String?
+  /// 原始数据是否删除
+  isOriginalFileDeleted    Boolean?             @default(false)
+  /// 原始数据删除时间
+  originalFileDeletedAt    DateTime?
+  /// 是否来自小程序上传
+  isFromMiniProgram        Boolean?             @default(false)
+  /// 是否来自应用上传
+  isFromApp                Boolean?             @default(false)
+  /// 是否来自桌面端上传
+  isFromDesktop            Boolean?             @default(false)
+  /// 分享 短Key
+  shareShortKey            String?
+  /// 分享查看次数
+  shareViewCount           Int?                 @default(0)
+  /// 分享下载次数
+  shareDownloadCount       Int?                 @default(0)
+  /// 是否已经消费
+  isConsumed               Boolean?             @default(false)
+  /// 消费类型
+  consumeType              UserFileConsumeType?
+  /// 创建时间
+  createdAt                DateTime             @default(now())
+  /// 更新时间
+  updatedAt                DateTime             @updatedAt
+  /// 删除时间
+  deletedAt                DateTime?
+  /// 用户
+  user                     User?                @relation(fields: [userId], references: [id])
+  /// 用户 ID
+  userId                   Int?
+  /// 批量执行
+  batch                    UserBatchFile?       @relation(fields: [batchId], references: [id])
+  /// 批量执行 ID
+  batchId                  Int?
+}
+
+/// 用户批量文件处理记录
+model UserBatchFile {
+  /// ID 主键
+  id        Int        @id @default(autoincrement())
+  /// 总文件
+  total     Int?
+  /// 已完成文件
+  completed Int?
+  /// 失败的文件
+  failed    Int?
+  /// 总大小
+  totalSize Int?
+  /// 压缩包路径
+  zipPath   String?
+  /// 压缩包大小
+  zipSize   Int?
+  /// 创建时间
+  createdAt DateTime   @default(now())
+  /// 更新时间
+  updatedAt DateTime   @updatedAt
+  /// 删除时间
+  deletedAt DateTime?
+  /// 文件
+  files     UserFile[]
+  /// 用户
+  user      User?      @relation(fields: [userId], references: [id])
+  /// 用户 ID
+  userId    Int?
+}
+
+/// 用户资源包
+model UserResourcePackage {
+  /// ID 主键
+  id         Int       @id @default(autoincrement())
+  /// 总次数
+  total      Int?
+  /// 已使用次数
+  used       Int?
+  /// 上一次消费时间
+  lastUsedAt DateTime?
+  /// 来源
+  source     String?
+  /// 创建时间
+  createdAt  DateTime  @default(now())
+  /// 更新时间
+  updatedAt  DateTime  @updatedAt
+  /// 删除时间
+  deletedAt  DateTime?
+  /// 用户
+  user       User?     @relation(fields: [userId], references: [id])
+  /// 用户 ID
+  userId     Int?
+}
+
+/// 用户记录来源
+enum UserRecordSource {
+  /// 推广
+  Promoter
+  /// 订单
+  Order
+  /// 系统
+  System
+  /// 活动
+  Activity
+  /// 其他
+  Other
+}
+
+/// 用户记录类型
+enum UserRecordType {
+  /// 推广联盟
+  Alliance
+  /// 提现
+  Withdraw
+  /// 资源包
+  ResourcePackage
+  /// 会员
+  Member
+  /// 其他
+  Other
+}
+
+/// 用户记录
+model UserRecord {
+  /// ID 主键
+  id        Int              @id @default(autoincrement())
+  /// 来源
+  source    UserRecordSource
+  /// 类型
+  type      UserRecordType
+  /// 具体数据
+  data      Json?
+  /// 备注
+  remark    String?
+  /// 创建时间
+  createdAt DateTime         @default(now())
+  /// 更新时间
+  updatedAt DateTime         @updatedAt
+  /// 删除时间
+  deletedAt DateTime?
+  /// 用户
+  user      User?            @relation(fields: [userId], references: [id])
+  /// 用户 ID
+  userId    Int?
+}

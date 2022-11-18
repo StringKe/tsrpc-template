@@ -1,0 +1,263 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "TSRPC Open API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/test/Session": {
+      "post": {
+        "tags": [
+          "test"
+        ],
+        "operationId": "test/Session",
+        "requestBody": {
+          "description": "Req<Session>",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/test_PtlSession_ReqSession"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "description": "ApiReturn<ResSession>",
+                  "properties": {
+                    "isSucc": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ],
+                      "default": true
+                    },
+                    "res": {
+                      "$ref": "#/components/schemas/test_PtlSession_ResSession"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error",
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    },
+    "/test/Throttler": {
+      "post": {
+        "tags": [
+          "test"
+        ],
+        "operationId": "test/Throttler",
+        "requestBody": {
+          "description": "Req<Throttler>",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/test_PtlThrottler_ReqThrottler"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "description": "ApiReturn<ResThrottler>",
+                  "properties": {
+                    "isSucc": {
+                      "type": "boolean",
+                      "enum": [
+                        true
+                      ],
+                      "default": true
+                    },
+                    "res": {
+                      "$ref": "#/components/schemas/test_PtlThrottler_ResThrottler"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error",
+            "$ref": "#/components/responses/error"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "test_PtlSession_ReqSession": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/base_BaseRequest"
+          },
+          {
+            "type": "object",
+            "properties": {}
+          }
+        ]
+      },
+      "base_BaseRequest": {
+        "type": "object",
+        "properties": {
+          "_token": {
+            "type": "string"
+          }
+        }
+      },
+      "test_PtlSession_ResSession": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/base_BaseResponse"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "count": {
+                "type": "number"
+              },
+              "before": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "count",
+              "before"
+            ]
+          }
+        ]
+      },
+      "base_BaseResponse": {
+        "type": "object",
+        "properties": {
+          "_token": {
+            "type": "string"
+          },
+          "_timestamp": {
+            "type": "number"
+          },
+          "_throttler": {
+            "type": "object",
+            "properties": {
+              "limit": {
+                "type": "number"
+              },
+              "remaining": {
+                "type": "number"
+              },
+              "reset": {
+                "type": "number"
+              }
+            }
+          }
+        }
+      },
+      "test_PtlThrottler_ReqThrottler": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/base_BaseRequest"
+          },
+          {
+            "type": "object",
+            "properties": {}
+          }
+        ]
+      },
+      "test_PtlThrottler_ResThrottler": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/base_BaseResponse"
+          },
+          {
+            "type": "object",
+            "properties": {}
+          }
+        ]
+      },
+      "?bson_ObjectID": {
+        "type": "string"
+      },
+      "?bson_ObjectId": {
+        "type": "string"
+      },
+      "?mongodb_ObjectID": {
+        "type": "string"
+      },
+      "?mongodb_ObjectId": {
+        "type": "string"
+      }
+    },
+    "responses": {
+      "error": {
+        "description": "Error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "title": "API 错误",
+              "description": "业务错误（ApiError）返回 HTTP 状态码 200，其它错误返回 HTTP 状态码 500",
+              "properties": {
+                "isSucc": {
+                  "type": "boolean",
+                  "enum": [
+                    false
+                  ],
+                  "default": false
+                },
+                "err": {
+                  "type": "object",
+                  "description": "TsrpcError",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "ApiError",
+                        "NetworkError",
+                        "ServerError",
+                        "ClientError"
+                      ]
+                    },
+                    "code": {
+                      "oneOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "integer"
+                        }
+                      ],
+                      "nullable": true
+                    }
+                  },
+                  "required": [
+                    "message",
+                    "type"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

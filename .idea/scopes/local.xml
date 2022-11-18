@@ -1,0 +1,3 @@
+<component name="DependencyValidationManager">
+  <scope name="local" pattern="file:prisma/schema.prisma" />
+</component>
