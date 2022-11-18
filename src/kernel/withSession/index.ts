@@ -1,18 +1,22 @@
 import { ApiCall, ApiReturn, HttpServer, WsServer } from 'tsrpc'
-import { get } from 'lodash'
+import { get, omit } from 'lodash'
 import * as Http from 'http'
-import { ResultSession, SessionManager } from './session'
 import redis from '../redis'
 import { URLSearchParams } from 'url'
-import { BaseRequest, BaseResponse } from '../../shared/protocols/base'
+import {
+    BaseRequest,
+    BaseResponse,
+    SessionData,
+} from '../../shared/protocols/base'
+import { SessionManager } from './session-manager'
+import { Session } from './session'
 
 export function withSession(
     server: HttpServer | WsServer,
+    secret: string,
     getUserRoles: (userId: number) => Promise<string[]>,
 ) {
-    const sessionManager = new SessionManager(redis, {
-        namespace: 'session',
-    })
+    const sessionManager = new SessionManager(redis, secret)
 
     server.flows.preApiCallFlow.push(
         async (node: ApiCall<BaseRequest, BaseResponse, any>) => {
@@ -42,24 +46,30 @@ export function withSession(
                 }
             }
 
-            let session: ResultSession | undefined
+            const inputPublicData = get(node.req, '_publicData')
+            const publicData = omit(inputPublicData, ['_hash'])
+            const publicDataHash = get(inputPublicData, '_hash')
 
-            if (token) {
-                session = await sessionManager.get(token)
-            }
+            let session: Session<SessionData> | undefined
 
-            if (!session) {
-                session = await sessionManager.create()
+            // 如果存在公共数据，从里面读取可信的数据
+            if (publicData && publicDataHash) {
+                session = await sessionManager.loadSession(
+                    publicData,
+                    publicDataHash,
+                )
+            } else if (token) {
+                session = await sessionManager.loadByToken(token)
+            } else {
+                session = sessionManager.createSession()
             }
 
             node.session = session
-            node.userId =
-                session.userId === 'anonymous'
-                    ? undefined
-                    : Number(session.userId)
+            const savedUserId = await session.getPrivate('userId')
+            node.userId = savedUserId ? Number(savedUserId) : undefined
             node.userRoles = node.userId ? await getUserRoles(node.userId) : []
 
-            node.logger.prefixs.push(`S[${session.sessionId}]`)
+            node.logger.prefixs.push(`S[${session.token}]`)
 
             return node
         },
@@ -70,13 +80,15 @@ export function withSession(
             call: ApiCall<BaseRequest, BaseResponse, any>
             return: ApiReturn<BaseResponse>
         }) => {
-            if (node.call.session) {
-                await node.call.session.write()
-            }
             const isSucc = get(node, 'return.isSucc')
-            if (isSucc) {
-                if (node.return.res) {
-                    node.return.res._token = node.call.session.sessionId
+            if (isSucc && node.return.res && node.call.session) {
+                const { publicDataHash, publicData } =
+                    await sessionManager.getWriteData(
+                        node.call.session as never,
+                    )
+                node.return.res._publicData = {
+                    ...publicData,
+                    _hash: publicDataHash,
                 }
             }
             return node

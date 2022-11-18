@@ -1,5 +1,6 @@
-import { ResultSession } from './kernel/withSession/session'
 import { Enforcer } from 'casbin'
+import { Session } from './kernel/withSession/session'
+import { SessionData } from './shared/protocols/base'
 
 declare module 'tsrpc' {
     export interface BaseConnection {
@@ -8,10 +9,17 @@ declare module 'tsrpc' {
     }
 
     export interface ApiCall {
-        session: ResultSession
+        /** Session **/
+        session: Session<SessionData>
+        /** Casbin 权限处理 **/
         casbin: Enforcer
+
+        /** 用户 Id **/
         userId?: number
+        /** 用户角色 **/
         userRoles?: string[]
+
+        /** [穿透数据] 频率限制，可以读取不建议修改 **/
         throttler?: {
             limit?: number
             remaining?: number

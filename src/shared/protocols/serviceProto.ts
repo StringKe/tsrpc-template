@@ -19,7 +19,7 @@ export interface ServiceType {
 }
 
 export const serviceProto: ServiceProto<ServiceType> = {
-    "version": 7,
+    "version": 9,
     "services": [
         {
             "id": 1,
@@ -50,20 +50,142 @@ export const serviceProto: ServiceProto<ServiceType> = {
                         "target": "base/BaseRequest"
                     }
                 }
+            ],
+            "properties": [
+                {
+                    "id": 0,
+                    "name": "type",
+                    "type": {
+                        "type": "Union",
+                        "members": [
+                            {
+                                "id": 0,
+                                "type": {
+                                    "type": "Literal",
+                                    "literal": "public"
+                                }
+                            },
+                            {
+                                "id": 1,
+                                "type": {
+                                    "type": "Literal",
+                                    "literal": "private"
+                                }
+                            },
+                            {
+                                "id": 2,
+                                "type": {
+                                    "type": "Literal",
+                                    "literal": "user"
+                                }
+                            },
+                            {
+                                "id": 3,
+                                "type": {
+                                    "type": "Literal",
+                                    "literal": null
+                                }
+                            }
+                        ]
+                    }
+                },
+                {
+                    "id": 1,
+                    "name": "userId",
+                    "type": {
+                        "type": "Number"
+                    },
+                    "optional": true
+                }
             ]
         },
         "base/BaseRequest": {
             "type": "Interface",
             "properties": [
                 {
+                    "id": 1,
+                    "name": "_publicData",
+                    "type": {
+                        "type": "Reference",
+                        "target": "base/PublicData"
+                    },
+                    "optional": true
+                }
+            ]
+        },
+        "base/PublicData": {
+            "type": "Interface",
+            "extends": [
+                {
                     "id": 0,
-                    "name": "_token",
+                    "type": {
+                        "type": "Reference",
+                        "target": "base/SessionData"
+                    }
+                }
+            ],
+            "properties": [
+                {
+                    "id": 0,
+                    "name": "_hash",
                     "type": {
                         "type": "String"
                     },
                     "optional": true
                 }
             ]
+        },
+        "base/SessionData": {
+            "type": "Interface",
+            "indexSignature": {
+                "keyType": "String",
+                "type": {
+                    "type": "Union",
+                    "members": [
+                        {
+                            "id": 0,
+                            "type": {
+                                "type": "Tuple",
+                                "elementTypes": [
+                                    {
+                                        "type": "Union",
+                                        "members": [
+                                            {
+                                                "id": 0,
+                                                "type": {
+                                                    "type": "Number"
+                                                }
+                                            },
+                                            {
+                                                "id": 1,
+                                                "type": {
+                                                    "type": "Literal",
+                                                    "literal": null
+                                                }
+                                            },
+                                            {
+                                                "id": 2,
+                                                "type": {
+                                                    "type": "Literal"
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "type": "Any"
+                                    }
+                                ]
+                            }
+                        },
+                        {
+                            "id": 1,
+                            "type": {
+                                "type": "Any"
+                            }
+                        }
+                    ]
+                }
+            }
         },
         "test/PtlSession/ResSession": {
             "type": "Interface",
@@ -90,6 +212,14 @@ export const serviceProto: ServiceProto<ServiceType> = {
                     "type": {
                         "type": "Number"
                     }
+                },
+                {
+                    "id": 2,
+                    "name": "userId",
+                    "type": {
+                        "type": "Number"
+                    },
+                    "optional": true
                 }
             ]
         },
@@ -97,10 +227,11 @@ export const serviceProto: ServiceProto<ServiceType> = {
             "type": "Interface",
             "properties": [
                 {
-                    "id": 0,
-                    "name": "_token",
+                    "id": 3,
+                    "name": "_publicData",
                     "type": {
-                        "type": "String"
+                        "type": "Reference",
+                        "target": "base/PublicData"
                     },
                     "optional": true
                 },

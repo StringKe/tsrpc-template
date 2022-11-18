@@ -17,9 +17,9 @@ import { md5 } from 'hash-wasm'
 import { get } from 'lodash'
 import { ServerResponse } from 'http'
 
-export function withThrottler(server: HttpServer | WsServer) {
-    const storage = new ThrottlerStorage(redis)
+export const throttlerStorage = new ThrottlerStorage(redis)
 
+export function withThrottler(server: HttpServer | WsServer) {
     function getTrackKey(node: ApiCall<BaseRequest, BaseResponse, any>) {
         const userId = node.userId
         const ip = node.conn.ip
@@ -52,7 +52,7 @@ export function withThrottler(server: HttpServer | WsServer) {
                 const trackKey = getTrackKey(node)
                 const recordKey = await genHashTrackKey(key, trackKey)
 
-                const ttls = await storage.getRecord(recordKey)
+                const ttls = await throttlerStorage.getRecord(recordKey)
                 const nearestExpiryTime =
                     ttls.length > 0
                         ? Math.ceil((ttls[0] - Date.now()) / 1000)
@@ -93,7 +93,7 @@ export function withThrottler(server: HttpServer | WsServer) {
                     reset: nearestExpiryTime,
                 }
 
-                await storage.addRecord(recordKey, ttl)
+                await throttlerStorage.addRecord(recordKey, ttl)
             }
             return node
         },

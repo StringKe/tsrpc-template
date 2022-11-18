@@ -9,7 +9,11 @@ import { QUEUES, WORKERS } from './queue'
 
 let metricsInterval: NodeJS.Timeout
 
-async function metrics() {
+async function metrics(stop = false) {
+    if (stop) {
+        clearInterval(metricsInterval)
+        return
+    }
     metricsInterval = setInterval(async () => {
         const metrics = await Promise.all(
             QUEUES.map(async (q) => {
@@ -30,13 +34,18 @@ async function metrics() {
 }
 
 async function preWith(server: HttpServer | WsServer) {
-    await withSession(server, async (_userId): Promise<string[]> => {
-        return []
-    })
+    await withSession(
+        server,
+        // openssl rand -base64 32
+        'zfqrHApAWKJ7f/IGemAuco/kIKvGSG8MQ1yp61E/GwM=',
+        async (_userId): Promise<string[]> => {
+            return []
+        },
+    )
     await withThrottler(server)
     await withCasbin(server, path.join(__dirname, 'model.conf'))
 
-    await metrics()
+    await metrics(true)
 }
 
 async function init() {
