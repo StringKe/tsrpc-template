@@ -27,3 +27,22 @@ declare module 'tsrpc' {
         }
     }
 }
+
+declare module 'http' {
+    export interface IncomingMessage {
+        query: any
+        rawQuery: any
+        body: any
+        rawBody: any
+    }
+
+    export interface ServerResponse {
+        text: (text: string) => void
+        html: (html: string) => void
+        json: (data: any) => void
+        xml: (data: any) => void
+        file: (data: Buffer, filename: string) => void
+        redirect: (url: string) => void
+        redirectBack: () => void
+    }
+}

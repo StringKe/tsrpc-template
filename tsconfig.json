@@ -1,13 +1,18 @@
 {
   "compilerOptions": {
     "lib": [
-      "es2018"
+      "ES2018",
+      "ES2019",
+      "ES2020",
+      "ES2021",
+      "ESNext"
     ],
     "module": "commonjs",
     "target": "es2018",
     "outDir": "dist",
     "strict": true,
     "esModuleInterop": true,
+    "allowJs": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "moduleResolution": "node",

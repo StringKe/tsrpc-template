@@ -10,7 +10,7 @@ generator client {
 
 generator tsrpc {
     provider = "node ./node_modules/@stringke/prisma-generator-tsrpc"
-    output   = "../src/shared/protocols/db"
+    output   = "../src/shared/db"
 }
 
 datasource db {

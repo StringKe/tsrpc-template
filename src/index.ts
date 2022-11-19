@@ -6,6 +6,7 @@ import { withCasbin } from './kernel/withCasbin'
 import { withThrottler } from './kernel/withThrottler'
 import './type'
 import { QUEUES, WORKERS } from './queue'
+import { withHttpServer } from './kernel/withHttpServer'
 
 let metricsInterval: NodeJS.Timeout
 
@@ -44,6 +45,7 @@ async function preWith(server: HttpServer | WsServer) {
     )
     await withThrottler(server)
     await withCasbin(server, path.join(__dirname, 'model.conf'))
+    await withHttpServer(server)
 
     await metrics(true)
 }

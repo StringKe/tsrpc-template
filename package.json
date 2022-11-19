@@ -15,9 +15,11 @@
   },
   "devDependencies": {
     "@stringke/prisma-generator-tsrpc": "^1.0.7",
+    "@types/content-type": "^1.1.5",
     "@types/lodash": "^4.14.189",
     "@types/mocha": "^8.2.3",
     "@types/node": "^16.18.0",
+    "@types/qs": "^6.9.7",
     "@typescript-eslint/eslint-plugin": "^5.43.0",
     "@typescript-eslint/parser": "^5.43.0",
     "eslint": "^8.27.0",
@@ -34,14 +36,22 @@
   "dependencies": {
     "@midwayjs/logger": "^2.17.0",
     "@prisma/client": "4.6.1",
+    "@tnwx/accesstoken": "^2.5.6",
+    "@tnwx/cache": "^2.5.6",
+    "@tnwx/kits": "^2.5.6",
+    "@tnwx/miniprogram": "^2.5.6",
+    "@tnwx/wxmp": "^2.5.6",
     "bullmq": "^3.2.2",
     "casbin": "^5.19.2",
     "casbin-redis-adapter": "^1.0.3",
+    "content-type": "^1.0.4",
     "dayjs": "^1.11.6",
     "hash-wasm": "^4.9.0",
     "ioredis": "^5.2.4",
     "lodash": "^4.17.21",
+    "parse-multipart-data": "^1.5.0",
     "putil-promisify": "^1.8.5",
-    "tsrpc": "^3.4.8"
+    "qs": "^6.11.0",
+    "tsrpc": "^3.4.10"
   }
 }
