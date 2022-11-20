@@ -185,6 +185,12 @@ export function withHttpServer(server: HttpServer | WsServer) {
                             })
                             conn.httpRes.end()
                         }
+                        conn.httpRes.send = (data: any, code = 200) => {
+                            conn.httpRes.statusCode = code
+                            conn.httpRes.end(data)
+                        }
+
+                        server.logger.log(`custom http request: ${urlPath}`)
 
                         await handle(conn.httpReq, conn.httpRes)
                         return null

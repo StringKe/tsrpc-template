@@ -1,10 +1,8 @@
 import { ApiHandleMap } from '../../kernel/withHttpServer/types'
+import { WechatCallback } from './wechat-callback'
 
 export const TrdApis: ApiHandleMap = {
-    '/test': (req, res) => {
-        console.log(req.query, req.rawQuery, req.body, req.rawBody)
-        res.end('Hello World')
-    },
+    '/trd/wechat': WechatCallback,
 }
 
 export const TrdApiKeys = Object.keys(TrdApis)

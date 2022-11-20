@@ -4,6 +4,26 @@ import './utils/dayjs-extends'
 import { Logger } from 'tsrpc-proto'
 import { loggers } from '@midwayjs/logger'
 
+const serverLogger: Logger = {
+    debug(...args: any[]): void {
+        const message = args[0]
+        logger.debug(message, ...args.slice(1))
+    },
+    error(...args: any[]): void {
+        console.log('error', ...args)
+        const message = args[0]
+        logger.error(message, ...args.slice(1))
+    },
+    log(...args: any[]): void {
+        const message = args[0]
+        logger.info(message, ...args.slice(1))
+    },
+    warn(...args: any[]): void {
+        const message = args[0]
+        logger.warn(message, ...args.slice(1))
+    },
+}
+
 const options: Partial<BaseServerOptions<any>> = {
     json: true,
     strictNullChecks: true,
@@ -11,6 +31,7 @@ const options: Partial<BaseServerOptions<any>> = {
     logReqBody: true,
     logResBody: true,
     logLevel: 'debug',
+    logger: serverLogger,
 }
 
 export const logger = loggers.createLogger('APP', {
@@ -32,31 +53,9 @@ export const logger = loggers.createLogger('APP', {
     maxSize: '3m',
     maxFiles: '31d',
 })
-
-const serverLogger: Logger = {
-    debug(...args: any[]): void {
-        const message = args[0]
-        logger.debug(message, ...args.slice(1))
-    },
-    error(...args: any[]): void {
-        console.log('error', ...args)
-        const message = args[0]
-        logger.error(message, ...args.slice(1))
-    },
-    log(...args: any[]): void {
-        const message = args[0]
-        logger.info(message, ...args.slice(1))
-    },
-    warn(...args: any[]): void {
-        const message = args[0]
-        logger.warn(message, ...args.slice(1))
-    },
-}
-
 export const httpServer = new HttpServer(serviceProto, {
     ...options,
     port: 3000,
-    logger: serverLogger,
 })
 
 export const wsServer = new WsServer(serviceProto, {
@@ -64,5 +63,4 @@ export const wsServer = new WsServer(serviceProto, {
     port: 3001,
     heartbeatWaitTime: 10000,
     logConnect: true,
-    logger: serverLogger,
 })

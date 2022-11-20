@@ -38,6 +38,7 @@
     "@prisma/client": "4.6.1",
     "@tnwx/accesstoken": "^2.5.6",
     "@tnwx/cache": "^2.5.6",
+    "@tnwx/commons": "^2.5.6",
     "@tnwx/kits": "^2.5.6",
     "@tnwx/miniprogram": "^2.5.6",
     "@tnwx/wxmp": "^2.5.6",

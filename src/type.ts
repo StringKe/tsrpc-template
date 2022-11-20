@@ -44,5 +44,6 @@ declare module 'http' {
         file: (data: Buffer, filename: string) => void
         redirect: (url: string) => void
         redirectBack: () => void
+        send: (data: any, code?: number) => void
     }
 }
