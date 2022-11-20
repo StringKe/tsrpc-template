@@ -4,9 +4,10 @@ import { HttpServer, WsServer } from 'tsrpc'
 import { withSession } from './kernel/withSession'
 import { withCasbin } from './kernel/withCasbin'
 import { withThrottler } from './kernel/withThrottler'
-import './type'
 import { QUEUES, WORKERS } from './queue'
 import { withHttpServer } from './kernel/withHttpServer'
+import './type'
+import './env'
 
 let metricsInterval: NodeJS.Timeout
 

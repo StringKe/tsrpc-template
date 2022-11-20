@@ -1,18 +1,27 @@
 # TSRPC Template
 
-> 客户端需要自行根据 `src/shared/protocols/base.ts` 将数据进行存储
+> 客户端需要自行根据 `src/shared/protocols/base.ts` 将数据进行进行本地存储或使用
+> 由于环境不同这里不提供具体实现代码
 
-- [x] Session 支持多种作用域方式 (`public`,`private`,`user`)
-- [x] Casbin 权限处理支持 `ACL` `RBAC` `ABAC` `RESTful` 等
-- [x] Api 第三方调度，大小写忽略
-- [x] Bullmq 队列, 通过修改 `/src/index.ts` 里的代码可以控制是否启用队列
-- [x] Throttler 频率限制，可以基于 key 或者 ip 或 用户 进行限制
-- [x] Prisma Tsrpc 支持，执行 `prisma generate` 自动生成 tsrpc 所需的类型定义
+功能附加
+
 - [x] 自定义请求封装，通过 `src/trd/index.ts` 可以自定义请求，同时会解析 `url` 参数和 `body` 序列化
-- [x] tnwx 微信封装支持，已配置 redis 缓存
-- [ ] Python 客户端
-- [ ] Java 客户端
-- [ ] Go 客户端
+- [x] Session 支持多种作用域方式 (`public`,`private`,`user`)
+- [x] Throttler 频率限制，可以基于 key 或者 ip 或 用户 进行限制
+- [x] 覆盖 tsrpc 日志，来自 `@midwayjs/logger` 支持日志审计，日志文件切割，日志级别控制
+
+其他特性
+
+- [x] Api 第三方调度，大小写忽略，api 文档中可忽略大小写
+- [x] Prisma 类型支持，执行 `prisma generate` 自动生成 tsrpc 所需的类型定义
+- [x] env 环境变量加载以及解析，同时支持类型定义和校验，代码中使用请导入 `import { env } from '[SRC]/env'` 使用
+
+第三方封装
+
+- [x] tnwx 微信封装支持，已配置 redis 缓存，回调接口已封装，仅需在 `kernal/wechat` 中实现自己的 `adapter` 即可
+- [x] Casbin 权限处理支持 `ACL` `RBAC` `ABAC` `RESTful` 等
+- [x] Bullmq 队列, 通过修改 `/src/index.ts` 里的代码可以控制是否启用队列
+- [ ] COS,OSS,S3 等云厂商存储封装
 
 ### Session
 

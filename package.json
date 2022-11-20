@@ -31,6 +31,7 @@
     "prisma": "4.6.1",
     "ts-node": "^10.9.1",
     "tsrpc-cli": "^2.4.5",
+    "type-fest": "^3.2.0",
     "typescript": "^4.9.3"
   },
   "dependencies": {
@@ -47,12 +48,14 @@
     "casbin-redis-adapter": "^1.0.3",
     "content-type": "^1.0.4",
     "dayjs": "^1.11.6",
+    "dotenv": "^16.0.3",
     "hash-wasm": "^4.9.0",
     "ioredis": "^5.2.4",
     "lodash": "^4.17.21",
     "parse-multipart-data": "^1.5.0",
     "putil-promisify": "^1.8.5",
     "qs": "^6.11.0",
-    "tsrpc": "^3.4.10"
+    "tsrpc": "^3.4.10",
+    "zod": "^3.19.1"
   }
 }
