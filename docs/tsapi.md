@@ -1,4 +1,3 @@
-
 # TSRPC API 接口文档
 
 ## 通用说明
@@ -20,9 +19,11 @@
 ### Session <a id="/test/Session"></a>
 
 **路径**
+
 - POST `/test/Session`
 
 **请求**
+
 ```ts
 interface ReqSession {
     _token?: string
@@ -30,6 +31,7 @@ interface ReqSession {
 ```
 
 **响应**
+
 ```ts
 interface ResSession {
     count: number,
@@ -49,9 +51,11 @@ interface ResSession {
 ### Throttler <a id="/test/Throttler"></a>
 
 **路径**
+
 - POST `/test/Throttler`
 
 **请求**
+
 ```ts
 interface ReqThrottler {
     _token?: string
@@ -59,6 +63,7 @@ interface ReqThrottler {
 ```
 
 **响应**
+
 ```ts
 interface ResThrottler {
     _token?: string,
@@ -72,12 +77,19 @@ interface ResThrottler {
 ```
 
 **配置**
+
 ```ts
 {
-  "throttler": {
-    "ttl": 120,
-    "limit": 10
-  }
+    "throttler"
+:
+    {
+        "ttl"
+    :
+        120,
+            "limit"
+    :
+        10
+    }
 }
 ```
 

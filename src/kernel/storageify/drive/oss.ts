@@ -1,13 +1,18 @@
-import {AbstractStorageDrive, BasicResponse, ExistsResponse, FileListResponse,} from '../abstract-storage'
+import {
+    AbstractStorageDrive,
+    BasicResponse,
+    ExistsResponse,
+    FileListResponse,
+} from '../abstract-storage'
 import OSS from 'ali-oss'
-import {Readable} from 'stream'
-import {PartialDeep} from 'type-fest'
+import { Readable } from 'stream'
+import { PartialDeep } from 'type-fest'
 
 export class OssDrive extends AbstractStorageDrive {
     name = 'cos'
     options: OSS.Options
     client: OSS
-    stsClient: OSS.STS;
+    stsClient: OSS.STS
 
     constructor(options: OSS.Options) {
         super(options)
@@ -56,11 +61,11 @@ export class OssDrive extends AbstractStorageDrive {
             this.client
                 .head(filePath)
                 .then((data) => {
-                    resolve({exists: true, raw: data})
+                    resolve({ exists: true, raw: data })
                 })
                 .catch((err) => {
                     if (err.code === 'NoSuchKey') {
-                        resolve({exists: false, raw: err})
+                        resolve({ exists: false, raw: err })
                     } else {
                         reject(err)
                     }
@@ -94,7 +99,7 @@ export class OssDrive extends AbstractStorageDrive {
                 this.client
                     .get(filePath)
                     .then((data) => {
-                        resolve({raw: data, ...data})
+                        resolve({ raw: data, ...data })
                     })
                     .catch((err) => {
                         reject(err)
@@ -122,7 +127,7 @@ export class OssDrive extends AbstractStorageDrive {
             this.client
                 .getACL(filePath)
                 .then((data) => {
-                    resolve({raw: data, ...data})
+                    resolve({ raw: data, ...data })
                 })
                 .catch((err) => {
                     reject(err)
@@ -137,8 +142,10 @@ export class OssDrive extends AbstractStorageDrive {
     list(
         filePath: string,
     ):
-        | AsyncIterable<FileListResponse &
-        PartialDeep<OSS.ObjectMeta> & { isDir: boolean }>
+        | AsyncIterable<
+              FileListResponse &
+                  PartialDeep<OSS.ObjectMeta> & { isDir: boolean }
+          >
         | undefined {
         const client = this.client
         const prefix = filePath
@@ -223,20 +230,29 @@ export class OssDrive extends AbstractStorageDrive {
         })
     }
 
-    sts(roleArn: string, policy?: object | string, expirationSeconds?: number, session?: string, options?: {
-        timeout: number;
-        ctx: any;
-    }) {
+    sts(
+        roleArn: string,
+        policy?: object | string,
+        expirationSeconds?: number,
+        session?: string,
+        options?: {
+            timeout: number
+            ctx: any
+        },
+    ) {
         return new Promise<OSS.Credentials>((resolve, reject) => {
-            this.stsClient.assumeRole(
-                roleArn,
-                policy,
-                expirationSeconds,
-                session,
-                options,
-            ).then(data => {
-                resolve(data.credentials)
-            }).catch(reject)
+            this.stsClient
+                .assumeRole(
+                    roleArn,
+                    policy,
+                    expirationSeconds,
+                    session,
+                    options,
+                )
+                .then((data) => {
+                    resolve(data.credentials)
+                })
+                .catch(reject)
         })
     }
 }

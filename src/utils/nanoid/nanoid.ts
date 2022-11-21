@@ -2,13 +2,15 @@ import { customAlphabet } from './customAlphabet'
 import { random } from './random'
 
 export const urlAlphabet =
-  'ModuleSymbhasOwnPr-0123456789ABCDEFGHNRVfgctiUvz_KqYTJkLxpZXIjQW'
+    'ModuleSymbhasOwnPr-0123456789ABCDEFGHNRVfgctiUvz_KqYTJkLxpZXIjQW'
 
 export const nanoid = (size = 21): string => {
-  let id = ''
-  const bytes: Uint8Array = random(size)
-  while (size--) id += urlAlphabet[bytes[size] & 63]
-  return id
+    let id = ''
+    const bytes: Uint8Array = random(size)
+    while (size--) {
+        id += urlAlphabet[bytes[size] & 63]
+    }
+    return id
 }
 
 const alphabet = '0123456789abcdefghijklmnopqrstuvwxyz'
