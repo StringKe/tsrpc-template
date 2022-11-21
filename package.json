@@ -59,6 +59,7 @@
     "lodash": "^4.17.21",
     "parse-multipart-data": "^1.5.0",
     "putil-promisify": "^1.8.5",
+    "qcloud-cos-sts": "^3.1.0",
     "qs": "^6.11.0",
     "tsrpc": "^3.4.10",
     "zod": "^3.19.1"

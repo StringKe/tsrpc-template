@@ -21,6 +21,12 @@ RUN rm -rf /app \
     && mv node_modules /app/ \
     && rm -rf /src
 
+# copy prisma file
+COPY ./prisma /app/prisma
+
+# copy casbin
+COPY ./src/model.conf /dist/model.conf
+
 # ENV
 ENV NODE_ENV production
 

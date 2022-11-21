@@ -3464,6 +3464,13 @@ putil-promisify@^1.8.5:
   resolved "https://registry.yarnpkg.com/putil-promisify/-/putil-promisify-1.8.5.tgz#bc6571b34be2687092aad0ee17c0e7210b60285d"
   integrity sha512-DItclasWWZokvpq3Aiaq0iV7WC8isP/0o/8mhC0yV6CQ781N/7NQHA1VyOm6hfpeFEwIQoo1C4Yjc5eH0q6Jbw==
 
+qcloud-cos-sts@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/qcloud-cos-sts/-/qcloud-cos-sts-3.1.0.tgz#02e3198b5c2b100b87182414edcd3fce98c592a0"
+  integrity sha512-qZvW6jVJuIjmhqNrsJAKJ9RtWOHaaWzZ/mVWF3+yRJIaIV0+L08IFfFLgS7g3MRHHRoYYU5Cnv8R071c+2py8A==
+  dependencies:
+    request "^2.88.0"
+
 qs@^6.11.0, qs@^6.4.0:
   version "6.11.0"
   resolved "https://registry.yarnpkg.com/qs/-/qs-6.11.0.tgz#fd0d963446f7a65e1367e01abd85429453f0c37a"

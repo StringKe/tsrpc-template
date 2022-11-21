@@ -1,16 +1,10 @@
-import {
-    AbstractStorageDrive,
-    BasicResponse,
-    ExistsResponse,
-    FileListResponse,
-} from '../abstract-storage'
+import {AbstractStorageDrive, BasicResponse, ExistsResponse, FileListResponse,} from '../abstract-storage'
 import COS from 'cos-nodejs-sdk-v5'
-import { Readable } from 'stream'
+import {Readable} from 'stream'
+import STS from 'qcloud-cos-sts'
 
-export declare type OmitObjectOptions<T extends COS.ObjectParams> = Omit<
-    T,
-    'Bucket' | 'Region' | 'Key'
->
+export declare type OmitObjectOptions<T extends COS.ObjectParams> = Omit<T,
+    'Bucket' | 'Region' | 'Key'>
 type WithRequired<T, K extends keyof T> = T & { [P in K]-?: T[P] }
 
 export interface CosOptions
@@ -34,10 +28,8 @@ export class CosDrive extends AbstractStorageDrive {
     copy(
         source: string,
         destination: string,
-        options?: Omit<
-            OmitObjectOptions<COS.PutObjectCopyParams>,
-            'CopySource'
-        >,
+        options?: Omit<OmitObjectOptions<COS.PutObjectCopyParams>,
+            'CopySource'>,
     ): Promise<void> {
         return new Promise((resolve, reject) => {
             this.client.putObjectCopy(
@@ -199,7 +191,7 @@ export class CosDrive extends AbstractStorageDrive {
     }
 
     getUrl(filePath: string): Promise<string> {
-        return this.getSignedUrl(filePath, { Method: 'GET' })
+        return this.getSignedUrl(filePath, {Method: 'GET'})
     }
 
     getVisibility(
@@ -238,7 +230,7 @@ export class CosDrive extends AbstractStorageDrive {
         return (async function* () {
             let Marker: string | undefined = undefined
             do {
-                const { Contents, NextMarker } = await client.getBucket({
+                const {Contents, NextMarker} = await client.getBucket({
                     Bucket: options.Bucket,
                     Region: options.Region,
                     Prefix: filePath,
@@ -317,6 +309,21 @@ export class CosDrive extends AbstractStorageDrive {
                 .catch((err) => {
                     reject(err)
                 })
+        })
+    }
+
+    sts(roleArn: string, policy: object, durationSeconds = 1800): Promise<STS.CredentialData> {
+        return new Promise<STS.CredentialData>((resolve, reject) => {
+            STS.getRoleCredential({
+                secretId: this.options.SecretId,
+                secretKey: this.options.SecretKey,
+                proxy: this.options.Proxy,
+                durationSeconds: durationSeconds,
+                policy: policy,
+                roleArn: roleArn,
+            }).then((data) => {
+                resolve(data)
+            }).catch(reject)
         })
     }
 }
