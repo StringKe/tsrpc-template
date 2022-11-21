@@ -2,285 +2,289 @@
 
 /* Enum 消费类型 */
 export const UserFileConsumeType: {
-    MEMBER: 'MEMBER'
-    RESOURCE_PACKAGE: 'RESOURCE_PACKAGE'
-    OTHER: 'OTHER'
-}
+    MEMBER: "MEMBER";
+    RESOURCE_PACKAGE: "RESOURCE_PACKAGE";
+    OTHER: "OTHER";
+};
 
-export type UserFileConsumeType =
-    typeof UserFileConsumeType[keyof typeof UserFileConsumeType]
+export type UserFileConsumeType = (typeof UserFileConsumeType)[keyof typeof UserFileConsumeType];
+
+
 
 /* Enum 用户记录来源 */
 export const UserRecordSource: {
-    Promoter: 'Promoter'
-    Order: 'Order'
-    System: 'System'
-    Activity: 'Activity'
-    Other: 'Other'
-}
+    Promoter: "Promoter";
+    Order: "Order";
+    System: "System";
+    Activity: "Activity";
+    Other: "Other";
+};
 
-export type UserRecordSource =
-    typeof UserRecordSource[keyof typeof UserRecordSource]
+export type UserRecordSource = (typeof UserRecordSource)[keyof typeof UserRecordSource];
+
+
 
 /* Enum 用户记录类型 */
 export const UserRecordType: {
-    Alliance: 'Alliance'
-    Withdraw: 'Withdraw'
-    ResourcePackage: 'ResourcePackage'
-    Member: 'Member'
-    Other: 'Other'
-}
+    Alliance: "Alliance";
+    Withdraw: "Withdraw";
+    ResourcePackage: "ResourcePackage";
+    Member: "Member";
+    Other: "Other";
+};
 
-export type UserRecordType = typeof UserRecordType[keyof typeof UserRecordType]
+export type UserRecordType = (typeof UserRecordType)[keyof typeof UserRecordType];
+
+
 
 /* Model 用户 */
 export type User = {
     /* ID 主键 */
-    id: number
+    id: number;
     /* 昵称 */
-    nickname: string
+    nickname: string;
     /* 头像 */
-    avatar: string | null
+    avatar: string | null;
     /* 手机号 */
-    phone: string | null
+    phone: string | null;
     /* 手机区号 */
-    phoneCode: string | null
+    phoneCode: string | null;
     /* 手机是否验证 */
-    phoneVerififedAt: Date | null
+    phoneVerififedAt: Date | null;
     /* 是否会员 */
-    isMember: boolean
+    isMember: boolean;
     /* 会员等级 */
-    memberLevel: number
+    memberLevel: number;
     /* 会员过期时间 */
-    memberExpiredAt: Date | null
+    memberExpiredAt: Date | null;
     /* 会员开通时间 */
-    memberStartedAt: Date | null
+    memberStartedAt: Date | null;
     /* 登陆 IP */
-    loginIp: string | null
+    loginIp: string | null;
     /* 登陆时间 */
-    loginAt: Date | null
+    loginAt: Date | null;
     /* 注册 IP */
-    registerIp: string | null
+    registerIp: string | null;
     /* 注册时间 */
-    registerAt: Date | null
+    registerAt: Date | null;
     /* 注册渠道 */
-    registerChannel: string | null
+    registerChannel: string | null;
     /* 邀请人 ID */
-    inviterId: number | null
+    inviterId: number | null;
     /* 邀请活动 ID */
-    inviteActivityId: number | null
+    inviteActivityId: number | null;
     /* 是否开通推广联盟 */
-    isPromoter: boolean
+    isPromoter: boolean;
     /* 推广联盟会员订单分成 */
-    promoterOrderDivide: number | null
+    promoterOrderDivide: number | null;
     /* 推广联盟资源包订单分成 */
-    promoterPackageDivide: number | null
+    promoterPackageDivide: number | null;
     /* 推广联盟其他类型订单分成 */
-    promoterOtherDivide: number | null
+    promoterOtherDivide: number | null;
     /* 总提成 */
-    totalDivide: number | null
+    totalDivide: number | null;
     /* 已提现 */
-    withdrawedDivide: number | null
+    withdrawedDivide: number | null;
     /* 未提现 */
-    unwithdrawDivide: number | null
+    unwithdrawDivide: number | null;
     /* 已结算提成 */
-    settledDivide: number | null
+    settledDivide: number | null;
     /* 未结算提成 */
-    unsettledDivide: number | null
+    unsettledDivide: number | null;
     /* 会员天数奖励 */
-    memberDayReward: number | null
+    memberDayReward: number | null;
     /* 资源包次数奖励 */
-    packageCountReward: number | null
+    packageCountReward: number | null;
     /* 提现方式 */
-    withdrawType: string | null
+    withdrawType: string | null;
     /* 提现账号 */
-    withdrawAccount: string | null
+    withdrawAccount: string | null;
     /* 是否封禁 */
-    isBanned: boolean
+    isBanned: boolean;
     /* 封禁原因 */
-    bannedReason: string | null
+    bannedReason: string | null;
     /* 封禁时间 */
-    bannedAt: Date | null
+    bannedAt: Date | null;
     /* 封禁过期时间 */
-    bannedExpiredAt: Date | null
+    bannedExpiredAt: Date | null;
     /* 创建时间 */
-    createdAt: Date
+    createdAt: Date;
     /* 更新时间 */
-    updatedAt: Date
+    updatedAt: Date;
     /* 删除时间 */
-    deletedAt: Date | null
+    deletedAt: Date | null;
     /* 文件 */
-    files: UserFile[]
+    files: UserFile[];
     /* 批量文件处理记录 */
-    batchFiles: UserBatchFile[]
+    batchFiles: UserBatchFile[];
     /* 资源包 */
-    resourcePackages: UserResourcePackage[]
+    resourcePackages: UserResourcePackage[];
     /* 用户记录 */
-    records: UserRecord[]
-}
+    records: UserRecord[];
+};
 
 /* Model 用户文件 */
 export type UserFile = {
     /* ID 主键 */
-    id: number
+    id: number;
     /* 文件名 */
-    fileName: string | null
+    fileName: string | null;
     /* 文件大小 */
-    fileSize: number | null
+    fileSize: number | null;
     /* 文件尺寸 [width,height] */
-    fileDimension: number[]
+    fileDimension: number[];
     /* 文件 MD5 */
-    fileMd5: string | null
+    fileMd5: string | null;
     /* 文件路径 */
-    filePath: string | null
+    filePath: string | null;
     /* 结果路径 */
-    resultPath: string | null
+    resultPath: string | null;
     /* 结果大小 */
-    resultSize: number | null
+    resultSize: number | null;
     /* 结果尺寸 [width,height] */
-    resultDimension: number[]
+    resultDimension: number[];
     /* 结果 MD5 */
-    resultMd5: string | null
+    resultMd5: string | null;
     /* 结果缩略图路径 */
-    thumbnailResultPath: string | null
+    thumbnailResultPath: string | null;
     /* 结果缩略图大小 */
-    thumbnailResultSize: number | null
+    thumbnailResultSize: number | null;
     /* 结果缩略图尺寸 [width,height] */
-    thumbnailResultDimension: number[]
+    thumbnailResultDimension: number[];
     /* 结果缩略图 MD5 */
-    thumbnailResultMd5: string | null
+    thumbnailResultMd5: string | null;
     /* 缩略图路径 */
-    thumbnailPath: string | null
+    thumbnailPath: string | null;
     /* 缩略图大小 */
-    thumbnailSize: number | null
+    thumbnailSize: number | null;
     /* 缩略图尺寸 [width,height] */
-    thumbnailDimension: number[]
+    thumbnailDimension: number[];
     /* 缩略图 MD5 */
-    thumbnailMd5: string | null
+    thumbnailMd5: string | null;
     /* 任务状态 */
-    taskStatus: string | null
+    taskStatus: string | null;
     /* 任务重试次数 */
-    taskRetryCount: number | null
+    taskRetryCount: number | null;
     /* 任务错误信息 */
-    taskError: string | null
+    taskError: string | null;
     /* 任务最近一次启动时间 */
-    taskLastStartedAt: Date | null
+    taskLastStartedAt: Date | null;
     /* 任务最近一次数据汇报时间 */
-    taskLastReportedAt: Date | null
+    taskLastReportedAt: Date | null;
     /* 任务人脸数据 */
-    taskFaceData: any | null
+    taskFaceData: any | null;
     /* 任务类型 */
-    taskType: string | null
+    taskType: string | null;
     /* 原始数据是否删除 */
-    isOriginalFileDeleted: boolean | null
+    isOriginalFileDeleted: boolean | null;
     /* 原始数据删除时间 */
-    originalFileDeletedAt: Date | null
+    originalFileDeletedAt: Date | null;
     /* 是否来自小程序上传 */
-    isFromMiniProgram: boolean | null
+    isFromMiniProgram: boolean | null;
     /* 是否来自应用上传 */
-    isFromApp: boolean | null
+    isFromApp: boolean | null;
     /* 是否来自桌面端上传 */
-    isFromDesktop: boolean | null
+    isFromDesktop: boolean | null;
     /* 分享 短Key */
-    shareShortKey: string | null
+    shareShortKey: string | null;
     /* 分享查看次数 */
-    shareViewCount: number | null
+    shareViewCount: number | null;
     /* 分享下载次数 */
-    shareDownloadCount: number | null
+    shareDownloadCount: number | null;
     /* 是否已经消费 */
-    isConsumed: boolean | null
+    isConsumed: boolean | null;
     /* 消费类型 */
-    consumeType: UserFileConsumeType | null
+    consumeType: UserFileConsumeType | null;
     /* 创建时间 */
-    createdAt: Date
+    createdAt: Date;
     /* 更新时间 */
-    updatedAt: Date
+    updatedAt: Date;
     /* 删除时间 */
-    deletedAt: Date | null
+    deletedAt: Date | null;
     /* 用户 */
-    user: User | null
+    user: User | null;
     /* 用户 ID */
-    userId: number | null
+    userId: number | null;
     /* 批量执行 */
-    batch: UserBatchFile | null
+    batch: UserBatchFile | null;
     /* 批量执行 ID */
-    batchId: number | null
-}
+    batchId: number | null;
+};
 
 /* Model 用户批量文件处理记录 */
 export type UserBatchFile = {
     /* ID 主键 */
-    id: number
+    id: number;
     /* 总文件 */
-    total: number | null
+    total: number | null;
     /* 已完成文件 */
-    completed: number | null
+    completed: number | null;
     /* 失败的文件 */
-    failed: number | null
+    failed: number | null;
     /* 总大小 */
-    totalSize: number | null
+    totalSize: number | null;
     /* 压缩包路径 */
-    zipPath: string | null
+    zipPath: string | null;
     /* 压缩包大小 */
-    zipSize: number | null
+    zipSize: number | null;
     /* 创建时间 */
-    createdAt: Date
+    createdAt: Date;
     /* 更新时间 */
-    updatedAt: Date
+    updatedAt: Date;
     /* 删除时间 */
-    deletedAt: Date | null
+    deletedAt: Date | null;
     /* 文件 */
-    files: UserFile[]
+    files: UserFile[];
     /* 用户 */
-    user: User | null
+    user: User | null;
     /* 用户 ID */
-    userId: number | null
-}
+    userId: number | null;
+};
 
 /* Model 用户资源包 */
 export type UserResourcePackage = {
     /* ID 主键 */
-    id: number
+    id: number;
     /* 总次数 */
-    total: number | null
+    total: number | null;
     /* 已使用次数 */
-    used: number | null
+    used: number | null;
     /* 上一次消费时间 */
-    lastUsedAt: Date | null
+    lastUsedAt: Date | null;
     /* 来源 */
-    source: string | null
+    source: string | null;
     /* 创建时间 */
-    createdAt: Date
+    createdAt: Date;
     /* 更新时间 */
-    updatedAt: Date
+    updatedAt: Date;
     /* 删除时间 */
-    deletedAt: Date | null
+    deletedAt: Date | null;
     /* 用户 */
-    user: User | null
+    user: User | null;
     /* 用户 ID */
-    userId: number | null
-}
+    userId: number | null;
+};
 
 /* Model 用户记录 */
 export type UserRecord = {
     /* ID 主键 */
-    id: number
+    id: number;
     /* 来源 */
-    source: UserRecordSource
+    source: UserRecordSource;
     /* 类型 */
-    type: UserRecordType
+    type: UserRecordType;
     /* 具体数据 */
-    data: any | null
+    data: any | null;
     /* 备注 */
-    remark: string | null
+    remark: string | null;
     /* 创建时间 */
-    createdAt: Date
+    createdAt: Date;
     /* 更新时间 */
-    updatedAt: Date
+    updatedAt: Date;
     /* 删除时间 */
-    deletedAt: Date | null
+    deletedAt: Date | null;
     /* 用户 */
-    user: User | null
+    user: User | null;
     /* 用户 ID */
-    userId: number | null
-}
+    userId: number | null;
+};

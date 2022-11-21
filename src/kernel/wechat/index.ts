@@ -1,8 +1,8 @@
 import { ApiConfigKit } from '@tnwx/accesstoken'
 import cache from '../cache'
 import { MsgAdapter } from '@tnwx/commons'
-import { AbstractAdapter } from './common/abstract-adapter'
-import { testAdapter, testMp } from './adapter/test-mp'
+import { AbstractAdapter } from './abstract-adapter'
+import { testAdapter, testMp } from './adapter'
 
 ApiConfigKit.setCache = {
     get(key: string): Promise<any> {
@@ -28,3 +28,6 @@ export function getWechatAdapter(appId: string): MsgAdapter {
     }
     return adapter
 }
+
+export * from './adapter'
+export * from './abstract-adapter'

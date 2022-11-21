@@ -15,6 +15,7 @@
 - [x] Api 第三方调度，大小写忽略，api 文档中可忽略大小写
 - [x] Prisma 类型支持，执行 `prisma generate` 自动生成 tsrpc 所需的类型定义
 - [x] env 环境变量加载以及解析，同时支持类型定义和校验，代码中使用请导入 `import { env } from '/src/env'` 使用
+- [x] 社会登陆 OAuth 支持 目前支持 QQ，如需要其他社会登陆请自行添加
 
 第三方封装
 

@@ -9,6 +9,7 @@ const envs = preloadEnv(doenv.config({}).parsed)
 // 定义环境变量的检测
 export const serverSchema = z.object({
     DATABASE_URL: z.string().url(),
+    APP_URL: z.string().url(),
     NODE_ENV: z.enum(['development', 'test', 'production']),
     ...getWechatConfig('test'),
     ...getCosConfig('test1'),

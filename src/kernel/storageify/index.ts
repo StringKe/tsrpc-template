@@ -5,9 +5,7 @@ import {
     FileListResponse,
     StorageDriver,
 } from './abstract-storage'
-import { LocalDrive } from './drive/local'
-import { CosDrive } from './drive/cos'
-import { OssDrive } from './drive/oss'
+import { CosDrive, LocalDrive, OssDrive } from './drive'
 
 export declare type StorageDriveClass = new (
     ...args: any[]
@@ -138,3 +136,6 @@ Storageify.addDrive(OssDrive)
 
 export const storageify = new Storageify()
 export default storageify
+
+export * from './drive'
+export * from './abstract-storage'

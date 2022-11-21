@@ -1,5 +1,5 @@
 import { ApiConfig, ApiConfigKit } from '@tnwx/accesstoken'
-import { AbstractAdapter } from '../common/abstract-adapter'
+import { AbstractAdapter } from '../abstract-adapter'
 
 export const testMp = new ApiConfig(
     'wx229a02f28350f828',
