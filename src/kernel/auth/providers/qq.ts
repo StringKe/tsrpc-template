@@ -42,6 +42,7 @@ export interface QQProfile extends QQProfileBase {
 }
 
 export class QQProvider extends OAuthProvider {
+    providerName = 'qq'
     options: QQProviderOptions
 
     constructor(options: QQProviderOptions) {

@@ -22,7 +22,9 @@ function resolve(from: string, to: string) {
 }
 
 export abstract class OAuthProvider {
-    protected options: OAuthProviderBaseOptions
+    abstract providerName: string
+
+    options: OAuthProviderBaseOptions
 
     constructor(options: OAuthProviderBaseOptions) {
         this.options = options
