@@ -59,7 +59,7 @@ export function withSession(
                     publicDataHash,
                 )
             } else if (token) {
-                session = await sessionManager.loadByToken(token)
+                session = await sessionManager.getSession(token)
             } else {
                 session = sessionManager.createSession()
             }

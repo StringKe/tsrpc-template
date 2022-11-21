@@ -39,7 +39,7 @@
 - [x] Session 不会发送给客户端，仅和当前客户端绑定, 通过 `call.session.setPrivate` 或者 `call.session.setPrivate` 设置
 - [x] User 会发送给客户端，和登陆后用户绑定，同一个客户不同端可以互通, 通过 `call.session.setUser`
   或者 `call.session.setUser` 设置
-- [ ] Device 用户设备管理，可以控制设备的登陆状态
+- [x] Device 用户设备管理，可以控制设备的登陆状态
 
 ### 自定义请求
 

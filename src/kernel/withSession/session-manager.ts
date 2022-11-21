@@ -27,7 +27,7 @@ export class SessionManager {
         )
     }
 
-    async loadByToken(token: string) {
+    async getSession(token: string) {
         const session = new Session(this.redis, {}, token)
         await session.init()
         return session
@@ -66,5 +66,24 @@ export class SessionManager {
         await hash.update(stringData)
         const hashed = hash.digest().toLowerCase()
         return hashed === publicDataHash.toLowerCase()
+    }
+
+    async getUserSessions(userId: number) {
+        const key = `session:user:${userId}`
+        const sessions = await this.redis.smembers(key)
+        return Promise.all(sessions.map((s) => this.getSession(s)))
+    }
+
+    async getUserDevices(userId: number) {
+        const key = `session:device:${userId}`
+        const sessions = await this.redis.smembers(key)
+        return Promise.all(sessions.map((s) => this.getSession(s)))
+    }
+
+    async logoutAllDeviceByUserId(userId: number) {
+        const sessions = await this.getUserSessions(userId)
+        for (const session of sessions) {
+            await session.logout()
+        }
     }
 }

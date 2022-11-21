@@ -55,10 +55,12 @@ async function loadSessionData(
 }
 
 export class Session<PublicData extends SessionData> {
-    public token: string | undefined
+    public token: string
     public userId: number | undefined
+    public deviceId: string | undefined
     private redisInstance: Redis
     private publicData: PublicData
+    private issueTime = dayjs()
 
     constructor(redis: Redis, publicData: PublicData, token?: string) {
         this.redisInstance = redis
@@ -100,9 +102,6 @@ export class Session<PublicData extends SessionData> {
     }
 
     async getPrivate(key: string) {
-        if (!this.token) {
-            this.token = getDataId(32)
-        }
         const value = await getSessionKeyData(
             this.redisInstance,
             `session:${this.token}`,
@@ -114,20 +113,13 @@ export class Session<PublicData extends SessionData> {
         return null
     }
 
-    async setPrivate(key: string, value: any, expires = 60 * 60 * 24 * 30) {
-        if (!this.token) {
-            this.token = getDataId(32)
-        }
-        if (expires) {
-            await this.redisInstance.set(
-                `session:${this.token}:${key}`,
-                JSON.stringify(value),
-                'EX',
-                expires,
-            )
-        } else {
-            await this.redisInstance.set(`session:${this.token}:${key}`, value)
-        }
+    async setPrivate(key: string, value: any) {
+        await this.redisInstance.set(
+            `session:${this.token}:${key}`,
+            JSON.stringify(value),
+            'EX',
+            await this.getSurvivalTtl(),
+        )
     }
 
     /**
@@ -137,10 +129,6 @@ export class Session<PublicData extends SessionData> {
      * @param key
      */
     async getUser(key: string) {
-        if (!this.token) {
-            this.token = getDataId(32)
-        }
-
         if (!this.userId) {
             this.userId = await this.getPrivate('userId')
         }
@@ -164,11 +152,7 @@ export class Session<PublicData extends SessionData> {
         return null
     }
 
-    async setUser(key: string, value: any, expires = 60 * 60 * 24 * 30) {
-        if (!this.token) {
-            this.token = getDataId(32)
-        }
-
+    async setUser(key: string, value: any) {
         if (!this.userId) {
             this.userId = await this.getPrivate('userId')
         }
@@ -181,22 +165,15 @@ export class Session<PublicData extends SessionData> {
             })
         }
 
-        if (expires) {
-            await this.redisInstance.set(
-                `user:${this.userId}:${key}`,
-                JSON.stringify(value),
-                'EX',
-                expires,
-            )
-        } else {
-            await this.redisInstance.set(`user:${this.userId}:${key}`, value)
-        }
+        await this.redisInstance.set(
+            `user:${this.userId}:${key}`,
+            JSON.stringify(value),
+            'EX',
+            await this.getSurvivalTtl(),
+        )
     }
 
     async getAllPrivate() {
-        if (!this.token) {
-            this.token = getDataId(32)
-        }
         return await loadSessionData(
             this.redisInstance,
             `session:${this.token}`,
@@ -209,9 +186,6 @@ export class Session<PublicData extends SessionData> {
     }
 
     async getAllUser() {
-        if (!this.token) {
-            this.token = getDataId(32)
-        }
         if (!this.userId) {
             this.userId = await this.getPrivate('userId')
         }
@@ -230,18 +204,89 @@ export class Session<PublicData extends SessionData> {
             this.token = getDataId(32)
         }
         this.userId = await this.getPrivate('userId')
+        this.deviceId = await this.getPrivate('deviceId')
+
+        // 数据已经过期
+        const ttl = await this.getSurvivalTtl()
+        if (ttl === 0) {
+            await this.logout()
+
+            this.token = getDataId(32)
+            this.userId = undefined
+            this.deviceId = undefined
+        }
     }
 
     async bindUser(userId: number) {
-        if (!this.token) {
-            this.token = getDataId(32)
-        }
-
         this.userId = userId
         const userKey = `session:user:${userId}`
         const allSessionToken = await this.redisInstance.smembers(userKey)
         allSessionToken.push(this.token)
         await this.redisInstance.sadd(userKey, ...uniq(allSessionToken))
         await this.setPrivate('userId', userId)
+    }
+
+    async bindDevice(deviceId: string, userId?: number) {
+        if (userId) {
+            await this.bindUser(userId)
+        }
+
+        if (!this.userId) {
+            this.userId = await this.getPrivate('userId')
+        }
+
+        if (!this.userId) {
+            throw new Error('正在尝试绑定 设备 ID，但是用户未关联')
+        }
+
+        const deviceKey = `session:device:${userId}`
+        const allDeviceId = await this.redisInstance.smembers(deviceKey)
+        allDeviceId.push(deviceId)
+        await this.redisInstance.sadd(deviceKey, ...uniq(allDeviceId))
+        await this.setPrivate('deviceId', deviceId)
+        this.deviceId = deviceId
+    }
+
+    async getSurvivalTtl() {
+        const timeNum = await this.getPrivate('issueTime')
+        if (timeNum) {
+            this.issueTime = dayjs(Number(timeNum))
+        }
+
+        if (!this.issueTime) {
+            this.issueTime = dayjs()
+        }
+        const ttl = this.issueTime.add(30, 'day').diff(dayjs(), 'second')
+        return ttl > 0 ? ttl : 0
+    }
+
+    async logout() {
+        if (!this.userId) {
+            this.userId = await this.getPrivate('userId')
+        }
+
+        if (this.userId) {
+            const userKey = `session:user:${this.userId}`
+            const allSessionToken = await this.redisInstance.smembers(userKey)
+            const index = allSessionToken.indexOf(this.token)
+            if (index >= 0) {
+                allSessionToken.splice(index, 1)
+            }
+            await this.redisInstance.sadd(userKey, ...uniq(allSessionToken))
+        }
+
+        if (this.deviceId) {
+            const deviceKey = `session:device:${this.userId}`
+            const allDeviceId = await this.redisInstance.smembers(deviceKey)
+            const index = allDeviceId.indexOf(this.deviceId)
+            if (index >= 0) {
+                allDeviceId.splice(index, 1)
+            }
+            await this.redisInstance.sadd(deviceKey, ...uniq(allDeviceId))
+        }
+
+        await this.redisInstance.del(`session:${this.token}:*`)
+        this.userId = undefined
+        this.deviceId = undefined
     }
 }
