@@ -18,10 +18,19 @@ export interface LocalOptions {
 
 export class LocalDrive extends AbstractStorageDrive {
     name = 'local'
+    options: LocalOptions
 
-    constructor(private options: LocalOptions) {
-        super()
+    constructor(options: LocalOptions) {
+        super(options)
         this.options = options
+    }
+
+    init(_options: LocalOptions): void {
+        // do nothing
+    }
+
+    destroy(): void {
+        // do nothing
     }
 
     getPath(filePath: string) {

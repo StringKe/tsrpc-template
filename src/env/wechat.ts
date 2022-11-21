@@ -21,7 +21,7 @@ export function getWechatConfig<T extends string>(
     ).toUpperCase() as unknown as ScreamingSnakeCase<T>
 
     return {
-        [`WECHAT_MP_${nameCase}_APP_ID` as const]: z.string(),
+        [`WECHAT_MP_${nameCase}_APP_ID`]: z.string(),
         [`WECHAT_MP_${nameCase}_APP_SECRET`]: z.string(),
         [`WECHAT_MP_${nameCase}_TOKEN`]: z.string(),
         [`WECHAT_MP_${nameCase}_ENCRYPT_MESSAGE`]: z.boolean().optional(),

@@ -6,6 +6,8 @@ import {
     StorageDriver,
 } from './abstract-storage'
 import { LocalDrive } from './drive/local'
+import { CosDrive } from './drive/cos'
+import { OssDrive } from './drive/oss'
 
 export declare type StorageDriveClass = new (
     ...args: any[]
@@ -31,14 +33,18 @@ export class Storageify implements StorageDriver {
         return driveClass
     }
 
-    createInstance(options: Record<string, any> & { name?: string }) {
-        const instanceName = options.name || 'default'
+    createInstance<T extends AbstractStorageDrive>(
+        name: string,
+        drive: string,
+        options: T['options'],
+    ) {
+        const instanceName = name || 'default'
 
         if (this.instances.has(instanceName)) {
             throw new Error(`Instance ${instanceName} already exists`)
         }
 
-        const driveClass = Storageify.getDrive(options.drive)
+        const driveClass = Storageify.getDrive(drive)
         const instance = new driveClass(options)
         instance.init(options)
 
@@ -127,6 +133,8 @@ export class Storageify implements StorageDriver {
 }
 
 Storageify.addDrive(LocalDrive)
+Storageify.addDrive(CosDrive)
+Storageify.addDrive(OssDrive)
 
 export const storageify = new Storageify()
 export default storageify

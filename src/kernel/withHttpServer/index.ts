@@ -1,5 +1,5 @@
 import { HttpConnection, HttpServer, WsServer } from 'tsrpc'
-import { TrdApiKeys, TrdApis } from '../../api/trd'
+import { TrdApiKeys, TrdApis } from '../../api/custom'
 import * as Url from 'url'
 import contentType from 'content-type'
 import { get } from 'lodash'

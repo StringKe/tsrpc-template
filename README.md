@@ -14,14 +14,23 @@
 
 - [x] Api 第三方调度，大小写忽略，api 文档中可忽略大小写
 - [x] Prisma 类型支持，执行 `prisma generate` 自动生成 tsrpc 所需的类型定义
-- [x] env 环境变量加载以及解析，同时支持类型定义和校验，代码中使用请导入 `import { env } from '[SRC]/env'` 使用
+- [x] env 环境变量加载以及解析，同时支持类型定义和校验，代码中使用请导入 `import { env } from '/src/env'` 使用
 
 第三方封装
 
 - [x] tnwx 微信封装支持，已配置 redis 缓存，回调接口已封装，仅需在 `kernal/wechat` 中实现自己的 `adapter` 即可
 - [x] Casbin 权限处理支持 `ACL` `RBAC` `ABAC` `RESTful` 等
 - [x] Bullmq 队列, 通过修改 `/src/index.ts` 里的代码可以控制是否启用队列
-- [ ] COS,OSS,S3 等云厂商存储封装
+- [x] COS,OSS,LOCAL 存储封装, 通过修改 `/src/env/index.ts` 里的代码可以检测环境变量，需要自行在 `/src/index.ts` 中初始化内容
+- [x] nanoid 生成随机字符串，导入 `/src/utils/naonid` 使用
+
+### 项目结构
+
+- `/src/index.ts` 项目入口，初始化 `app` 和 `server`，并启动服务
+- `/src/kernel` 大多数代码封装在此处
+- `/src/env` 环境变量加载，同时支持类型定义和校验
+- `/src/queue` 队列任务
+- `/src/api/custom` 自定义 api 请求
 
 ### Session
 

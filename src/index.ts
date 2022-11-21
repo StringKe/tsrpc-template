@@ -4,36 +4,13 @@ import { HttpServer, WsServer } from 'tsrpc'
 import { withSession } from './kernel/withSession'
 import { withCasbin } from './kernel/withCasbin'
 import { withThrottler } from './kernel/withThrottler'
-import { QUEUES, WORKERS } from './queue'
+import { metrics, quiteQueue } from './queue'
 import { withHttpServer } from './kernel/withHttpServer'
 import './type'
 import './env'
-
-let metricsInterval: NodeJS.Timeout
-
-async function metrics(stop = false) {
-    if (stop) {
-        clearInterval(metricsInterval)
-        return
-    }
-    metricsInterval = setInterval(async () => {
-        const metrics = await Promise.all(
-            QUEUES.map(async (q) => {
-                return {
-                    name: q.name,
-                    completed: await q.getMetrics('completed'),
-                    failed: await q.getMetrics('failed'),
-                }
-            }),
-        )
-
-        metrics.forEach((m) => {
-            httpServer.logger.log(
-                `Queue [${m.name}] completed: ${m.completed.count} failed: ${m.failed.count}`,
-            )
-        })
-    }, 1000 * 5)
-}
+// import storageify from './kernel/storageify'
+// import { LocalDrive } from './kernel/storageify/drive/local'
+// import env from './env'
 
 async function preWith(server: HttpServer | WsServer) {
     await withSession(
@@ -49,6 +26,12 @@ async function preWith(server: HttpServer | WsServer) {
     await withHttpServer(server)
 
     await metrics(true)
+
+    // 存储初始化
+    // storageify.createInstance<LocalDrive>('default', 'local', {
+    //     basePath: path.join(__dirname, env.STORAGE_LOCAL_TEST2_PATH || '/'),
+    //     url: env.STORAGE_LOCAL_TEST2_URL || 'http://localhost:3000/storage',
+    // })
 }
 
 async function init() {
@@ -70,15 +53,10 @@ process.on('SIGINT', async () => {
     await httpServer.stop()
 
     httpServer.logger.log(`等待队列关闭...`)
-    await Promise.all(QUEUES.map((queue) => queue.close()))
-    await Promise.all(WORKERS.map((worker) => worker.close()))
+    await quiteQueue()
 
     httpServer.logger.log(`Ws 服务器开始关闭...`)
     await wsServer.stop()
-
-    if (metricsInterval) {
-        clearInterval(metricsInterval)
-    }
 
     httpServer.logger.log(`服务器已关闭`)
     process.exit(0)

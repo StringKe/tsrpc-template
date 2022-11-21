@@ -54,6 +54,11 @@ export interface StorageDriver {
 
 export abstract class AbstractStorageDrive implements StorageDriver {
     name: string
+    options: any
+
+    protected constructor(options: any) {
+        this.options = options
+    }
 
     static StreamToBuffer(stream: NodeJS.ReadableStream): Promise<Buffer> {
         return new Promise((resolve, reject) => {
