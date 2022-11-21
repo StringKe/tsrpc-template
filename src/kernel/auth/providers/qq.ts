@@ -67,6 +67,10 @@ export class QQProvider extends OAuthProvider {
         if (!inputState) {
             return Promise.reject(new Error('state is required'))
         }
+        const code = params.code
+        if (!code) {
+            return Promise.reject(new Error('code is required'))
+        }
         return OAuthProvider.verifyState(inputState)
     }
 
@@ -88,11 +92,7 @@ export class QQProvider extends OAuthProvider {
         url.searchParams.set('fmt', 'json')
 
         return new Promise<QQAccessTokenInfo>((resolve, reject) => {
-            got<{
-                access_token: string
-                expires_in: number
-                refresh_token: string
-            }>(url.toString(), {
+            got<QQAccessTokenInfo>(url.toString(), {
                 responseType: 'json',
             })
                 .then((response) => {

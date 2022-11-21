@@ -42,17 +42,10 @@ export class AuthManager {
 
     getInstance<T extends OAuthProvider>(name: string): T {
         const instance = this.instances.get(name)
-        if (!instance) {
-            throw new Error(`No such instance: ${name}`)
-        }
         return instance as T
     }
 
     removeInstance(name: string) {
-        const instance = this.instances.get(name)
-        if (!instance) {
-            throw new Error(`No such instance: ${name}`)
-        }
         this.instances.delete(name)
     }
 }

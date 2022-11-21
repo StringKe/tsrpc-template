@@ -71,6 +71,8 @@ export abstract class OAuthProvider {
             url.searchParams.set('srp', successRedirectPath)
         }
 
+        url.searchParams.set('sn', this.options.name)
+
         return Promise.resolve(url.toString())
     }
 
