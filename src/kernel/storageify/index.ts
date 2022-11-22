@@ -48,6 +48,10 @@ export class Storageify implements StorageDriver {
         instance.init(options)
 
         this.instances.set(instanceName, instance)
+
+        if (!this.instances.has('default')) {
+            this.instances.set('default', instance)
+        }
     }
 
     getInstance<T extends AbstractStorageDrive>(name = 'default'): T {

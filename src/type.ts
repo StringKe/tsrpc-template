@@ -48,3 +48,14 @@ declare module 'http' {
         send: (data: any, code?: number) => void
     }
 }
+
+type Falsy = false | 0 | '' | null | undefined
+
+declare global {
+    interface Array<T> {
+        filter<S extends T>(
+            predicate: BooleanConstructor,
+            thisArg?: any,
+        ): Exclude<S, Falsy>[]
+    }
+}

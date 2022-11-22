@@ -12,7 +12,8 @@ export const serverSchema = z.object({
     APP_URL: z.string().url(),
     NODE_ENV: z.enum(['development', 'test', 'production']),
     ...getWechatConfig('test'),
-    ...getCosConfig('DEFAULT'),
+    ...getCosConfig('public'),
+    ...getCosConfig('private'),
 })
 
 const _serverEnv = serverSchema.safeParse(envs)

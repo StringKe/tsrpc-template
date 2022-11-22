@@ -9,8 +9,8 @@ generator client {
 }
 
 generator tsrpc {
-    provider = "node ./node_modules/@stringke/prisma-generator-tsrpc"
-    output   = "../src/shared/db"
+  provider = "node ./node_modules/@stringke/prisma-generator-tsrpc"
+  output   = "../src/shared/db"
 }
 
 datasource db {
@@ -102,6 +102,32 @@ model User {
   resourcePackages      UserResourcePackage[]
   /// 用户记录
   records               UserRecord[]
+  /// 用户关联账号
+  auths                 UserAuth[]
+}
+
+model UserAuth {
+  /// ID 主键
+  id                Int       @id @default(autoincrement())
+  /// 平台
+  platform          String
+  /// 平台ID
+  platformId        String
+  /// 平台用户关联值
+  platformValue     String
+  /// 平台用户关联值类型
+  platformValueType String
+  /// 完整数据
+  data              Json
+  /// 创建时间
+  createdAt         DateTime  @default(now())
+  /// 更新时间
+  updatedAt         DateTime  @updatedAt
+  /// 删除时间
+  deletedAt         DateTime?
+  user              User      @relation(fields: [userId], references: [id])
+  /// 用户ID
+  userId            Int
 }
 
 /// 消费类型

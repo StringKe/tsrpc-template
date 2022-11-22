@@ -36,11 +36,17 @@ async function init() {
     await metrics(true)
 
     // 存储初始化
-    storageify.createInstance<CosDrive>('default', 'cos', {
-        SecretId: env.STORAGE_COS_DEFAULT_SECRET_ID,
-        SecretKey: env.STORAGE_COS_DEFAULT_SECRET_KEY,
-        Bucket: env.STORAGE_COS_DEFAULT_BUCKET,
-        Region: env.STORAGE_COS_DEFAULT_REGION,
+    storageify.createInstance<CosDrive>('public', 'cos', {
+        SecretId: env.STORAGE_COS_PUBLIC_SECRET_ID,
+        SecretKey: env.STORAGE_COS_PUBLIC_SECRET_KEY,
+        Bucket: env.STORAGE_COS_PUBLIC_BUCKET,
+        Region: env.STORAGE_COS_PUBLIC_REGION,
+    })
+    storageify.createInstance<CosDrive>('private', 'cos', {
+        SecretId: env.STORAGE_COS_PRIVATE_SECRET_ID,
+        SecretKey: env.STORAGE_COS_PRIVATE_SECRET_KEY,
+        Bucket: env.STORAGE_COS_PRIVATE_BUCKET,
+        Region: env.STORAGE_COS_PRIVATE_REGION,
     })
 
     // 社会化登陆初始化
