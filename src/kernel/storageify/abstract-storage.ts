@@ -53,7 +53,7 @@ export interface StorageDriver {
 }
 
 export abstract class AbstractStorageDrive implements StorageDriver {
-    name: string
+    static driveName: string
     options: any
 
     protected constructor(options: any) {

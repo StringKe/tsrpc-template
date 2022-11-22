@@ -8,9 +8,9 @@ import { metrics, quiteQueue } from './queue'
 import { withHttpServer } from './kernel/withHttpServer'
 import './type'
 import './env'
-// import storageify from './kernel/storageify'
-// import { LocalDrive } from './kernel/storageify/drive/local'
-// import env from './env'
+import authManager, { QQProvider } from './kernel/auth'
+import storageify, { CosDrive } from './kernel/storageify'
+import env from './env'
 
 async function preWith(server: HttpServer | WsServer) {
     await withSession(
@@ -24,14 +24,6 @@ async function preWith(server: HttpServer | WsServer) {
     await withThrottler(server)
     await withCasbin(server, path.join(__dirname, 'model.conf'))
     await withHttpServer(server)
-
-    await metrics(true)
-
-    // 存储初始化
-    // storageify.createInstance<LocalDrive>('default', 'local', {
-    //     basePath: path.join(__dirname, env.STORAGE_LOCAL_TEST2_PATH || '/'),
-    //     url: env.STORAGE_LOCAL_TEST2_URL || 'http://localhost:3000/storage',
-    // })
 }
 
 async function init() {
@@ -40,6 +32,23 @@ async function init() {
 
     await preWith(httpServer)
     await preWith(wsServer)
+
+    await metrics(true)
+
+    // 存储初始化
+    storageify.createInstance<CosDrive>('default', 'cos', {
+        SecretId: env.STORAGE_COS_DEFAULT_SECRET_ID,
+        SecretKey: env.STORAGE_COS_DEFAULT_SECRET_KEY,
+        Bucket: env.STORAGE_COS_DEFAULT_BUCKET,
+        Region: env.STORAGE_COS_DEFAULT_REGION,
+    })
+
+    // 社会化登陆初始化
+    authManager.init<QQProvider>('qq', 'test-qq', {
+        clientId: '102018312',
+        clientSecret: 'AC1cz83mIbhZEfsr',
+        canGetUnionId: true,
+    })
 }
 
 async function main() {

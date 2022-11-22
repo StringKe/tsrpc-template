@@ -16,7 +16,9 @@ export class Storageify implements StorageDriver {
     instances: Map<string, AbstractStorageDrive> = new Map()
 
     static addDrive(drive: StorageDriveClass) {
-        this.drives.set(drive.name, drive)
+        // @ts-ignore
+        const diveName = drive['driveName']
+        this.drives.set(diveName, drive)
     }
 
     static removeDrive(drive: StorageDriveClass | string) {
@@ -37,7 +39,6 @@ export class Storageify implements StorageDriver {
         options: T['options'],
     ) {
         const instanceName = name || 'default'
-
         if (this.instances.has(instanceName)) {
             throw new Error(`Instance ${instanceName} already exists`)
         }

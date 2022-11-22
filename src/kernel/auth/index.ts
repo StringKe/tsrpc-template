@@ -11,7 +11,9 @@ export class AuthManager {
     instances: Map<string, OAuthProvider> = new Map()
 
     static addDrive(drive: OAuthProviderClass) {
-        this.drives.set(drive.name, drive)
+        // @ts-ignore
+        const name = drive['providerName']
+        this.drives.set(name, drive)
     }
 
     static removeDrive(drive: OAuthProviderClass | string) {

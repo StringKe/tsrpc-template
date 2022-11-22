@@ -21,7 +21,7 @@ export interface CosOptions
 }
 
 export class CosDrive extends AbstractStorageDrive {
-    name = 'cos'
+    static driveName = 'cos'
     options: CosOptions
     client: COS
 

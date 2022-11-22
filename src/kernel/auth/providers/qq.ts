@@ -51,7 +51,7 @@ function isQQApiError(data: any): data is QQApiError {
 }
 
 export class QQProvider extends OAuthProvider {
-    providerName = 'qq'
+    static providerName = 'qq'
     options: QQProviderOptions
 
     constructor(options: QQProviderOptions) {

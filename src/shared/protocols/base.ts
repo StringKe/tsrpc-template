@@ -1,5 +1,3 @@
-import { UserRecordSource } from '../db'
-
 export interface SessionData {
     [key: string]: [number | null | undefined, any] | any
 }
@@ -12,6 +10,7 @@ export interface PublicData extends SessionData {
 export interface BaseRequest {
     /** [穿透数据] Session 相关数据存储，可以读取 修改无效 **/
     _publicData?: PublicData
+    _timestamp?: number
 }
 
 export interface BaseResponse {

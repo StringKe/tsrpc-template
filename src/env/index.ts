@@ -2,7 +2,7 @@ import { z, ZodFormattedError } from 'zod'
 import { getWechatConfig } from './wechat'
 import doenv from 'dotenv'
 import { preloadEnv } from './preload'
-import { getCosConfig, getLocalConfig } from './storageify'
+import { getCosConfig } from './storageify'
 
 const envs = preloadEnv(doenv.config({}).parsed)
 
@@ -12,8 +12,7 @@ export const serverSchema = z.object({
     APP_URL: z.string().url(),
     NODE_ENV: z.enum(['development', 'test', 'production']),
     ...getWechatConfig('test'),
-    ...getCosConfig('test1'),
-    ...getLocalConfig('test2'),
+    ...getCosConfig('DEFAULT'),
 })
 
 const _serverEnv = serverSchema.safeParse(envs)

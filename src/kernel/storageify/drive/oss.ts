@@ -9,7 +9,7 @@ import { Readable } from 'stream'
 import { PartialDeep } from 'type-fest'
 
 export class OssDrive extends AbstractStorageDrive {
-    name = 'cos'
+    static driveName = 'oss'
     options: OSS.Options
     client: OSS
     stsClient: OSS.STS

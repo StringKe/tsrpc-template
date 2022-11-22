@@ -90,6 +90,10 @@ export class Session<PublicData extends SessionData> {
         return null
     }
 
+    hasPublic(key: string) {
+        return !!this.getPublic(key)
+    }
+
     setPublic(key: string, value: any, expires = 60 * 60 * 24 * 30) {
         if (expires) {
             const time = dayjs().add(expires, 'second').valueOf()
@@ -111,6 +115,10 @@ export class Session<PublicData extends SessionData> {
             return JSON.parse(value[1])
         }
         return null
+    }
+
+    async hasPrivate(key: string) {
+        return !!this.getPrivate(key)
     }
 
     async setPrivate(key: string, value: any) {
@@ -150,6 +158,10 @@ export class Session<PublicData extends SessionData> {
             return JSON.parse(value[1])
         }
         return null
+    }
+
+    async hasUser(key: string) {
+        return !!this.getUser(key)
     }
 
     async setUser(key: string, value: any) {

@@ -17,7 +17,7 @@ export interface LocalOptions {
 }
 
 export class LocalDrive extends AbstractStorageDrive {
-    name = 'local'
+    static driveName = 'local'
     options: LocalOptions
 
     constructor(options: LocalOptions) {

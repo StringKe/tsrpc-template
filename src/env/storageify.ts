@@ -32,9 +32,7 @@ export function getCosConfig<T extends string>(
         | `STORAGE_COS_${ScreamingSnakeCase<T>}_SECRET_KEY`
         | `STORAGE_COS_${ScreamingSnakeCase<T>}_SECRET_ID`
         | `STORAGE_COS_${ScreamingSnakeCase<T>}_BUCKET`
-        | `STORAGE_COS_${ScreamingSnakeCase<T>}_REGION`]: z.ZodNullable<
-        z.ZodOptional<z.ZodString>
-    >
+        | `STORAGE_COS_${ScreamingSnakeCase<T>}_REGION`]: z.ZodString
 } {
     const nameCase = snakeCase(
         name,
