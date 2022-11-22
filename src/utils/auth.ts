@@ -1,10 +1,7 @@
 import { authManager, QQProvider } from '../kernel/auth'
 
-export const testQQProvider = new QQProvider({
+authManager.init<QQProvider>('qq', 'test-qq', {
     clientId: '102018312',
     clientSecret: 'AC1cz83mIbhZEfsr',
     canGetUnionId: true,
-    name: 'test-qq',
 })
-
-authManager.registerProvider(testQQProvider)

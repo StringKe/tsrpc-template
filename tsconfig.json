@@ -8,7 +8,7 @@
       "ESNext"
     ],
     "module": "commonjs",
-    "target": "es2018",
+    "target": "ESNext",
     "outDir": "dist",
     "strict": true,
     "esModuleInterop": true,

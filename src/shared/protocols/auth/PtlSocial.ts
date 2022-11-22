@@ -2,8 +2,12 @@ import { BaseRequest, BaseResponse, BaseConf } from '../base'
 
 export interface ReqSocial extends BaseRequest {
     id: number
+    erp?: string
+    srp?: string
 }
 
-export interface ResSocial extends BaseResponse {}
+export interface ResSocial extends BaseResponse {
+    qq: string
+}
 
 export const conf: BaseConf = {}

@@ -29,7 +29,7 @@ export class AuthManager {
     init<T extends OAuthProvider>(
         driver: string,
         name: string,
-        options: T['options'],
+        options: Omit<T['options'], 'name'>,
     ) {
         const driveClass = AuthManager.getDrive(driver)
         const instance = new driveClass({

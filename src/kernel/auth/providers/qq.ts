@@ -3,7 +3,7 @@ import {
     OAuthProvider,
     OAuthProviderBaseOptions,
 } from '../abstract-provider'
-import got from 'got'
+import axios from 'axios'
 
 export declare type QQProviderOptions = OAuthProviderBaseOptions & {
     clientId: string
@@ -35,10 +35,19 @@ export interface QQProfileBase {
     gender: string
 }
 
+export interface QQApiError {
+    error: string
+    error_description: string
+}
+
 export interface QQProfile extends QQProfileBase {
     unionId?: string
     openId: string
     raw: any
+}
+
+function isQQApiError(data: any): data is QQApiError {
+    return data && data.error
 }
 
 export class QQProvider extends OAuthProvider {
@@ -92,15 +101,24 @@ export class QQProvider extends OAuthProvider {
         url.searchParams.set('fmt', 'json')
 
         return new Promise<QQAccessTokenInfo>((resolve, reject) => {
-            got<QQAccessTokenInfo>(url.toString(), {
-                responseType: 'json',
-            })
+            axios
+                .get<
+                    | QQAccessTokenInfo
+                    | {
+                          error: string
+                          error_description: string
+                      }
+                >(url.toString(), {
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                })
                 .then((response) => {
-                    const data = response.body
-                    if (data.error) {
+                    const data = response.data
+                    if (isQQApiError(data)) {
                         return reject(new Error(data.error_description))
                     }
-                    resolve(data)
+                    return resolve(data)
                 })
                 .catch((error) => {
                     reject(error)
@@ -117,12 +135,13 @@ export class QQProvider extends OAuthProvider {
         }
 
         return new Promise<QQOpenInfo>((resolve, reject) => {
-            got<QQOpenInfo>(url.toString(), {
-                responseType: 'json',
-            })
+            axios
+                .get<QQOpenInfo>(url.toString(), {
+                    responseType: 'json',
+                })
                 .then((response) => {
-                    const data = response.body
-                    if (data.error) {
+                    const data = response.data
+                    if (isQQApiError(data)) {
                         return reject(new Error(data.error_description))
                     }
                     resolve(data)
@@ -142,11 +161,12 @@ export class QQProvider extends OAuthProvider {
         url.searchParams.set('openid', openInfo.openid)
 
         return new Promise<QQProfile>((resolve, reject) => {
-            got<QQProfileBase>(url.toString(), {
-                responseType: 'json',
-            })
+            axios
+                .get<QQProfileBase>(url.toString(), {
+                    responseType: 'json',
+                })
                 .then((response) => {
-                    const data = response.body
+                    const data = response.data
                     if (data.ret !== 0) {
                         return reject(new Error(data.msg))
                     }
@@ -154,6 +174,11 @@ export class QQProvider extends OAuthProvider {
                         ...data,
                         openId: openInfo.openid,
                         unionId: openInfo.unionid,
+                        raw: {
+                            ...data,
+                            ...openInfo,
+                            params,
+                        },
                     })
                 })
                 .catch((error) => {
