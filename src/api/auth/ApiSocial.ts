@@ -28,6 +28,7 @@ export default async function (call: ApiCall<ReqSocial, ResSocial>) {
     let qqUrl = await redis.getCacheKey(`auth:${call.req.id}`)
     if (!qqUrl) {
         qqUrl = await qqProvider.getAuthorizationUrl({
+            id: call.req.id as never,
             srp: call.req.srp,
             erp: call.req.erp,
         })

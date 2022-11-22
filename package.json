@@ -62,6 +62,7 @@
     "putil-promisify": "^1.8.5",
     "qcloud-cos-sts": "^3.1.0",
     "qs": "^6.11.0",
+    "route-recognizer": "^0.3.4",
     "tsrpc": "^3.4.10",
     "zod": "^3.19.1"
   }

@@ -1,4 +1,4 @@
-import { BaseRequest, BaseResponse, BaseConf } from '../base'
+import { BaseConf, BaseRequest, BaseResponse } from '../base'
 
 export interface ReqSocial extends BaseRequest {
     id?: string

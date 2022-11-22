@@ -36,7 +36,7 @@ export class AuthManager {
         const driveClass = AuthManager.getDrive(driver)
         const instance = new driveClass({
             name,
-            options,
+            ...options,
         })
         this.instances.set(name, instance)
         return instance

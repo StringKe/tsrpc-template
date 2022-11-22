@@ -61,7 +61,11 @@ export class QQProvider extends OAuthProvider {
 
     async getAuthorizationUrl(params: BaseAuthorizationUrl): Promise<string> {
         const scope = ['get_user_info']
-        const redirectUrl = await this.getCallbackUrl(params.erp, params.srp)
+        const redirectUrl = await this.getCallbackUrl(
+            params.id,
+            params.erp,
+            params.srp,
+        )
         const url = new URL('https://graph.qq.com/oauth2.0/authorize')
         url.searchParams.set('response_type', 'code')
         url.searchParams.set('client_id', this.options.clientId)
@@ -118,6 +122,7 @@ export class QQProvider extends OAuthProvider {
                     if (isQQApiError(data)) {
                         return reject(new Error(data.error_description))
                     }
+                    OAuthProvider.clearState(params.state)
                     return resolve(data)
                 })
                 .catch((error) => {

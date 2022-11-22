@@ -1,17 +1,8 @@
-import { ApiHandleMap } from '../../kernel/withHttpServer/types'
 import { WechatCallback } from './wechat-callback'
 import { AuthCallback } from './auth-callback'
+import RouteRecognizer from 'route-recognizer'
 
-export const TrdApis: ApiHandleMap = {
-    '/trd/wechat': WechatCallback,
-    '/custom/auth/social': AuthCallback,
-}
+export const customRouter = new RouteRecognizer()
 
-export const TrdApiKeys = Object.keys(TrdApis)
-    .map((item) => {
-        return [item.replaceAll('//', '/').toLowerCase(), item] as [
-            string,
-            keyof typeof TrdApis,
-        ]
-    })
-    .filter((item) => item[0].length)
+customRouter.add([{ path: '/custom/auth/social', handler: AuthCallback }])
+customRouter.add([{ path: '/trd/wechat', handler: WechatCallback }])

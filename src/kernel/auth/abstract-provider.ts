@@ -10,6 +10,7 @@ export interface OAuthProviderBaseOptions {
 export interface BaseAuthorizationUrl {
     erp?: string
     srp?: string
+    id: string
 }
 
 function resolve(from: string, to: string) {
@@ -36,30 +37,27 @@ export abstract class OAuthProvider {
         return id
     }
 
-    static async getStateValue(state: string): Promise<string | null> {
-        const value = await redis.get(`oauth:state:${state}`)
-        if (value) {
-            await redis.del(`oauth:state:${state}`)
-        }
-        return value
+    static getStateValue(state: string): Promise<string | null> {
+        return redis.get(`oauth:state:${state}`)
     }
 
     static async verifyState(state: string) {
         const result = await redis.get(`oauth:state:${state}`)
-        if (result) {
-            await redis.del(`oauth:state:${state}`)
-            return true
-        }
-        return false
+        return !!result
+    }
+
+    static async clearState(state: string): Promise<number> {
+        return redis.del(`oauth:state:${state}`)
     }
 
     getCallbackUrl(
+        id: string,
         errorRedirectPath?: string,
         successRedirectPath?: string,
     ): Promise<string> {
         const appUrl = env.APP_URL
         const callbackPath = this.options.callbackPath || '/custom/auth/social'
-        const callbackUrl = resolve(callbackPath, appUrl)
+        const callbackUrl = resolve(appUrl, callbackPath)
 
         const url = new URL(callbackUrl)
         // 如果失败了，就跳转到 errorRedirectPath
@@ -72,6 +70,7 @@ export abstract class OAuthProvider {
         }
 
         url.searchParams.set('sn', this.options.name)
+        url.searchParams.set('id', id)
 
         return Promise.resolve(url.toString())
     }

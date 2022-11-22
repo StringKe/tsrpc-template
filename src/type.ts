@@ -34,6 +34,7 @@ declare module 'http' {
         rawQuery: any
         body: any
         rawBody: any
+        params: Record<string, any>
     }
 
     export interface ServerResponse {
